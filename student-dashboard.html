@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - EduAI Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 1.8em;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            padding: 20px 0;
+        }
+        
+        .nav-item {
+            display: block;
+            padding: 15px 30px;
+            color: #333;
+            text-decoration: none;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: #f0f8f0;
+            border-left-color: #4CAF50;
+            color: #4CAF50;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .welcome-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 5px;
+        }
+        
+        .courses-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .section-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .course-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .course-title {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+        
+        .course-progress {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            height: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: #FFD700;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        .ai-assistant {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .ai-assistant:hover {
+            transform: scale(1.1);
+        }
+        
+        .ai-chat {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 400px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+        }
+        
+        .chat-header {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            padding: 15px;
+            border-radius: 15px 15px 0 0;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        
+        .chat-input {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+        
+        .chat-input button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 80%;
+        }
+        
+        .user-message {
+            background: #4CAF50;
+            color: white;
+            margin-left: auto;
+        }
+        
+        .ai-message {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                order: 2;
+            }
+            
+            .content {
+                order: 1;
+            }
+            
+            .ai-chat {
+                width: 90%;
+                right: 5%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎓 Student Dashboard</h1>
+        <div class="user-info">
+            <span id="welcome-text">Welcome, Alex Johnson!</span>
+            <a href="index.html" class="logout-btn">Logout</a>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <nav class="sidebar">
+            <a href="#" class="nav-item active" onclick="showSection('dashboard')">📊 Dashboard</a>
+            <a href="#" class="nav-item" onclick="showSection('courses')">📚 My Courses</a>
+            <a href="#" class="nav-item" onclick="showSection('assignments')">📝 Assignments</a>
+            <a href="#" class="nav-item" onclick="showSection('grades')">🎯 Grades</a>
+            <a href="#" class="nav-item" onclick="showSection('ai-study')">🤖 AI Study Assistant</a>
+            <a href="#" class="nav-item" onclick="showSection('ai-quiz')">⚡ AI Quiz Generator</a>
+            <a href="#" class="nav-item" onclick="showSection('progress')">📈 Progress Analytics</a>
+            <a href="#" class="nav-item" onclick="showSection('discussions')">💬 Discussions</a>
+        </nav>
+        
+        <main class="content">
+            <div id="dashboard-section">
+                <div class="welcome-section">
+                    <h2>Welcome back, Alex! 🎉</h2>
+                    <p>Your AI-powered learning journey continues. Here's what's happening today:</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-number">5</div>
+                        <div>Active Courses</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-number">3</div>
+                        <div>Pending Assignments</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-number">87%</div>
+                        <div>Average Grade</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⚡</div>
+                        <div class="stat-number">12</div>
+                        <div>AI Interactions Today</div>
+                    </div>
+                </div>
+                
+                <div class="courses-section">
+                    <h2 class="section-title">📚 Current Courses</h2>
+                    <div class="courses-grid">
+                        <div class="course-card" onclick="alert('Entering Mathematics course...')">
+                            <div class="course-title">Advanced Mathematics</div>
+                            <div>Prof. Johnson • 24 students</div>
+                            <div class="course-progress">
+                                <div class="progress-bar" style="width: 75%"></div>
+                            </div>
+                            <div>Progress: 75%</div>
+                        </div>
+                        <div class="course-card" onclick="alert('Entering Computer Science course...')">
+                            <div class="course-title">Computer Science</div>
+                            <div>Prof. Davis • 32 students</div>
+                            <div class="course-progress">
+                                <div class="progress-bar" style="width: 60%"></div>
+                            </div>
+                            <div>Progress: 60%</div>
+                        </div>
+                        <div class="course-card" onclick="alert('Entering Physics course...')">
+                            <div class="course-title">Physics Laboratory</div>
+                            <div>Prof. Wilson • 18 students</div>
+                            <div class="course-progress">
+                                <div class="progress-bar" style="width: 90%"></div>
+                            </div>
+                            <div>Progress: 90%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="other-sections" style="display: none;">
+                <div class="welcome-section">
+                    <h2 id="section-title">Section Content</h2>
+                    <p id="section-content">This section is under development. AI functionalities will be fully implemented here.</p>
+                    <div style="margin-top: 20px;">
+                        <button onclick="showSection('dashboard')" style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+                            ← Back to Dashboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- AI Assistant -->
+    <div class="ai-assistant" onclick="toggleAIChat()">🤖</div>
+    
+    <div class="ai-chat" id="ai-chat">
+        <div class="chat-header">
+            🤖 AI Study Assistant
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message ai-message">
+                Hi Alex! I'm your AI study assistant. How can I help you today? I can:
+                <br>• Explain difficult concepts
+                <br>• Generate practice questions  
+                <br>• Provide study recommendations
+                <br>• Help with homework
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chat-input" placeholder="Ask me anything..." onkeypress="handleChatInput(event)">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize user info
+        document.addEventListener('DOMContentLoaded', function() {
+            const userName = localStorage.getItem('userName') || 'Student';
+            document.getElementById('welcome-text').textContent = `Welcome, ${userName}!`;
+        });
+        
+        function showSection(sectionName) {
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Show appropriate section
+            if (sectionName === 'dashboard') {
+                document.getElementById('dashboard-section').style.display = 'block';
+                document.getElementById('other-sections').style.display = 'none';
+            } else {
+                document.getElementById('dashboard-section').style.display = 'none';
+                document.getElementById('other-sections').style.display = 'block';
+                
+                const titles = {
+                    'courses': '📚 My Courses',
+                    'assignments': '📝 Assignments & AI Assistance',
+                    'grades': '🎯 Grades & Performance Analytics',
+                    'ai-study': '🤖 AI Study Assistant',
+                    'ai-quiz': '⚡ AI Quiz Generator',
+                    'progress': '📈 AI-Powered Progress Analytics',
+                    'discussions': '💬 Smart Discussion Forums'
+                };
+                
+                const contents = {
+                    'courses': 'Browse your enrolled courses, access AI-generated study materials, and track your progress with intelligent insights.',
+                    'assignments': 'View assignments with AI-powered hints, get automated feedback, and submit work through our intelligent platform.',
+                    'grades': 'See your grades analyzed by AI algorithms that provide personalized improvement suggestions and learning path recommendations.',
+                    'ai-study': 'Access your personal AI tutor for 24/7 learning support, concept explanations, and personalized study plans.',
+                    'ai-quiz': 'Generate unlimited practice quizzes using AI based on your course content and learning progress.',
+                    'progress': 'View detailed analytics powered by machine learning that track your learning patterns and predict future performance.',
+                    'discussions': 'Participate in AI-moderated discussions with intelligent topic suggestions and peer matching.'
+                };
+                
+                document.getElementById('section-title').textContent = titles[sectionName];
+                document.getElementById('section-content').textContent = contents[sectionName];
+            }
+        }
+        
+        function toggleAIChat() {
+            const chat = document.getElementById('ai-chat');
+            chat.style.display = chat.style.display === 'flex' ? 'none' : 'flex';
+        }
+        
+        function handleChatInput(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+        
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const messages = document.getElementById('chat-messages');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user-message';
+            userMsg.textContent = message;
+            messages.appendChild(userMsg);
+            
+            // Clear input
+            input.value = '';
+            
+            // Simulate AI response
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'message ai-message';
+                aiMsg.innerHTML = getAIResponse(message);
+                messages.appendChild(aiMsg);
+                messages.scrollTop = messages.scrollHeight;
+            }, 1000);
+            
+            messages.scrollTop = messages.scrollHeight;
+        }
+        
+        function getAIResponse(message) {
+            const responses = [
+                "Great question! Based on your current progress in Mathematics, I recommend focusing on calculus fundamentals. Would you like me to generate some practice problems?",
+                "I can help you with that! Let me break down the concept into simpler parts. First, let's understand the basic principles...",
+                "According to your learning pattern, you perform best with visual aids. I can suggest some interactive resources for this topic.",
+                "That's a complex topic! I've analyzed similar questions from your coursework and found that 73% of students struggle with this concept. Let me provide a step-by-step explanation...",
+                "Excellent! Your question shows you're thinking critically. Based on your performance data, I believe you're ready for more advanced concepts in this area."
+            ];
+            
+            return responses[Math.floor(Math.random() * responses.length)];
+        }
+    </script>
+</body>
+</html>

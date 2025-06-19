@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Study Assistant - EduAI Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #4CAF50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .back-link {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+        }
+        
+        .chat-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+        
+        .chat-header {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            text-align: center;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+        
+        .chat-input-container {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            background: white;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        .chat-input {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        
+        .chat-input textarea {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 20px;
+            resize: none;
+            font-family: inherit;
+            font-size: 16px;
+            min-height: 50px;
+            max-height: 100px;
+        }
+        
+        .chat-input textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        .send-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            min-width: 80px;
+        }
+        
+        .send-btn:hover {
+            background: #45a049;
+        }
+        
+        .send-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 15px 20px;
+            border-radius: 20px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        
+        .user-message {
+            background: #4CAF50;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .ai-message {
+            background: white;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-bottom-left-radius: 5px;
+        }
+        
+        .ai-typing {
+            background: white;
+            color: #666;
+            padding: 15px 20px;
+            border-radius: 20px;
+            border-bottom-left-radius: 5px;
+            max-width: 80%;
+            font-style: italic;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .features-panel {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+            height: 600px;
+            overflow-y: auto;
+        }
+        
+        .features-panel h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .feature-category {
+            margin-bottom: 30px;
+        }
+        
+        .feature-category h3 {
+            color: #4CAF50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .feature-buttons {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .feature-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            transition: transform 0.2s ease;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .feature-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .study-tools {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .tool-card {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .tool-card h4 {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .quick-actions {
+            background: #e8f5e8;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .quick-actions h4 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+        
+        .quick-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            margin: 3px;
+            font-size: 12px;
+        }
+        
+        .quick-btn:hover {
+            background: #45a049;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="student-dashboard.html" class="back-link">← Back to Dashboard</a>
+        
+        <div class="header">
+            <h1>🤖 AI Study Assistant</h1>
+            <p>Your personal AI tutor available 24/7 for all your learning needs</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h3>💬 Chat with AI Tutor</h3>
+                    <p>Ask questions, get explanations, solve problems</p>
+                </div>
+                
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message ai-message">
+                        <strong>🤖 AI Tutor:</strong><br>
+                        Hello! I'm your personal AI study assistant. I can help you with:
+                        <br>• Explaining complex concepts
+                        <br>• Solving mathematical problems  
+                        <br>• Writing assistance and feedback
+                        <br>• Study planning and strategies
+                        <br>• Test preparation tips
+                        <br><br>What would you like to learn about today?
+                    </div>
+                </div>
+                
+                <div class="chat-input-container">
+                    <div class="quick-actions">
+                        <h4>Quick Actions:</h4>
+                        <button class="quick-btn" onclick="askQuestion('Explain calculus derivatives')">📊 Calculus Help</button>
+                        <button class="quick-btn" onclick="askQuestion('How to write a good essay?')">✍️ Writing Tips</button>
+                        <button class="quick-btn" onclick="askQuestion('Study plan for exams')">📚 Study Plan</button>
+                        <button class="quick-btn" onclick="askQuestion('Solve quadratic equations')">🧮 Math Problem</button>
+                    </div>
+                    
+                    <div class="chat-input">
+                        <textarea id="user-input" placeholder="Ask me anything about your studies..." onkeypress="handleKeyPress(event)"></textarea>
+                        <button class="send-btn" onclick="sendMessage()" id="send-btn">Send</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="features-panel">
+                <h2>🎯 AI Features</h2>
+                
+                <div class="feature-category">
+                    <h3>📚 Subject Help</h3>
+                    <div class="feature-buttons">
+                        <button class="feature-btn" onclick="askQuestion('Help me with advanced mathematics concepts')">
+                            📊 Mathematics Tutor<br>
+                            <small>Calculus, Algebra, Statistics, Geometry</small>
+                        </button>
+                        <button class="feature-btn" onclick="askQuestion('Explain computer science algorithms')">
+                            💻 Computer Science<br>
+                            <small>Programming, Algorithms, Data Structures</small>
+                        </button>
+                        <button class="feature-btn" onclick="askQuestion('Physics problem solving help')">
+                            ⚛️ Physics Assistant<br>
+                            <small>Mechanics, Thermodynamics, Electromagnetism</small>
+                        </button>
+                        <button class="feature-btn" onclick="askQuestion('Help with chemistry concepts')">
+                            🧪 Chemistry Guide<br>
+                            <small>Organic, Inorganic, Physical Chemistry</small>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="feature-category">
+                    <h3>📝 Study Tools</h3>
+                    <div class="feature-buttons">
+                        <button class="feature-btn" onclick="askQuestion('Create a study schedule for me')">
+                            📅 Study Planner<br>
+                            <small>Personalized study schedules</small>
+                        </button>
+                        <button class="feature-btn" onclick="askQuestion('Help me understand this topic better')">
+                            🎯 Concept Explainer<br>
+                            <small>Break down complex topics</small>
+                        </button>
+                        <button class="feature-btn" onclick="askQuestion('Create practice questions for my test')">
+                            ❓ Practice Questions<br>
+                            <small>Generate custom quizzes</small>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="feature-category">
+                    <h3>📈 Learning Support</h3>
+                    <div class="feature-buttons">
+                        <button class="feature-btn" onclick="askQuestion('How can I improve my memory?')">
+                            🧠 Memory Techniques<br>
+                            <small>Mnemonics, spaced repetition</small>
+                        </button>
+                        <button class="feature-btn" onclick="askQuestion('Help me with exam anxiety')">
+                            😌 Stress Management<br>
+                            <small>Test anxiety and study stress</small>
+                        </button>
+                        <button class="feature-btn" onclick="askQuestion('Improve my note-taking skills')">
+                            📋 Note-Taking Tips<br>
+                            <small>Effective study methods</small>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="study-tools">
+            <h2>🛠️ Quick Study Tools</h2>
+            <div class="tools-grid">
+                <div class="tool-card" onclick="openTool('flashcards')">
+                    <h4>📇 AI Flashcards</h4>
+                    <p>Generate smart flashcards from your notes</p>
+                </div>
+                <div class="tool-card" onclick="openTool('summarizer')">
+                    <h4>📄 Text Summarizer</h4>
+                    <p>Summarize articles and textbooks</p>
+                </div>
+                <div class="tool-card" onclick="openTool('translator')">
+                    <h4>🌐 Language Helper</h4>
+                    <p>Translation and language learning</p>
+                </div>
+                <div class="tool-card" onclick="openTool('calculator')">
+                    <h4>🧮 Smart Calculator</h4>
+                    <p>Advanced mathematical computations</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+        
+        function askQuestion(question) {
+            document.getElementById('user-input').value = question;
+            sendMessage();
+        }
+        
+        function sendMessage() {
+            const input = document.getElementById('user-input');
+            const messages = document.getElementById('chat-messages');
+            const sendBtn = document.getElementById('send-btn');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user-message';
+            userMsg.innerHTML = `<strong>You:</strong><br>${message}`;
+            messages.appendChild(userMsg);
+            
+            // Clear input and disable send button
+            input.value = '';
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Thinking...';
+            
+            // Show typing indicator
+            const typingMsg = document.createElement('div');
+            typingMsg.className = 'ai-typing';
+            typingMsg.id = 'typing-indicator';
+            typingMsg.textContent = 'AI is thinking...';
+            messages.appendChild(typingMsg);
+            
+            // Scroll to bottom
+            messages.scrollTop = messages.scrollHeight;
+            
+            // Simulate AI response
+            setTimeout(() => {
+                // Remove typing indicator
+                const typing = document.getElementById('typing-indicator');
+                if (typing) typing.remove();
+                
+                // Add AI response
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'message ai-message';
+                aiMsg.innerHTML = `<strong>🤖 AI Tutor:</strong><br>${getAIResponse(message)}`;
+                messages.appendChild(aiMsg);
+                
+                // Re-enable send button
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send';
+                
+                // Scroll to bottom
+                messages.scrollTop = messages.scrollHeight;
+            }, 2000 + Math.random() * 2000);
+        }
+        
+        function getAIResponse(message) {
+            const responses = {
+                calculus: `Great question about calculus! Let me break down derivatives for you:
+                
+                <strong>What is a derivative?</strong><br>
+                A derivative represents the rate of change of a function. Think of it as the slope of the curve at any point.
+                
+                <strong>Basic Rules:</strong><br>
+                • Power Rule: d/dx(x^n) = n×x^(n-1)<br>
+                • Sum Rule: d/dx(f+g) = f' + g'<br>
+                • Product Rule: d/dx(fg) = f'g + fg'<br>
+                
+                <strong>Example:</strong><br>
+                For f(x) = 3x² + 2x - 1:<br>
+                f'(x) = 6x + 2
+                
+                Would you like me to work through more examples or explain any specific part?`,
+                
+                essay: `Excellent question about essay writing! Here's a comprehensive guide:
+                
+                <strong>1. Planning Phase:</strong><br>
+                • Understand the prompt thoroughly<br>
+                • Research and gather credible sources<br>
+                • Create an outline with main points<br>
+                
+                <strong>2. Structure:</strong><br>
+                • Introduction: Hook, background, thesis<br>
+                • Body: One main idea per paragraph<br>
+                • Conclusion: Summarize and reflect<br>
+                
+                <strong>3. Writing Tips:</strong><br>
+                • Use topic sentences for each paragraph<br>
+                • Provide evidence and examples<br>
+                • Maintain formal academic tone<br>
+                • Cite sources properly<br>
+                
+                <strong>4. Revision:</strong><br>
+                • Check for clarity and flow<br>
+                • Proofread for grammar and spelling<br>
+                • Ensure arguments are well-supported<br>
+                
+                What type of essay are you working on? I can provide more specific guidance!`,
+                
+                study: `Creating an effective study plan is crucial for success! Here's a personalized approach:
+                
+                <strong>📅 Study Schedule Framework:</strong><br>
+                • Assess available time and commitments<br>
+                • Break subjects into manageable chunks<br>
+                • Use time-blocking technique<br>
+                
+                <strong>🎯 Prioritization Method:</strong><br>
+                1. Identify exam dates and deadlines<br>
+                2. Rank subjects by difficulty/importance<br>
+                3. Allocate more time to challenging topics<br>
+                
+                <strong>⏰ Daily Study Routine:</strong><br>
+                • Morning: Most challenging subjects<br>
+                • Afternoon: Medium difficulty topics<br>
+                • Evening: Review and light reading<br>
+                
+                <strong>📊 Progress Tracking:</strong><br>
+                • Set weekly goals<br>
+                • Track completion rates<br>
+                • Adjust plan based on performance<br>
+                
+                <strong>🔄 Study Techniques:</strong><br>
+                • Pomodoro Technique (25min focus + 5min break)<br>
+                • Active recall and spaced repetition<br>
+                • Practice testing<br>
+                
+                What subjects are you studying? I can create a specific schedule for you!`,
+                
+                math: `Let me help you with quadratic equations! They're fundamental in algebra:
+                
+                <strong>Standard Form:</strong> ax² + bx + c = 0<br>
+                
+                <strong>Solution Methods:</strong><br>
+                
+                <strong>1. Quadratic Formula:</strong><br>
+                x = (-b ± √(b²-4ac)) / 2a<br>
+                
+                <strong>2. Factoring:</strong><br>
+                Find two numbers that multiply to 'ac' and add to 'b'<br>
+                
+                <strong>3. Completing the Square:</strong><br>
+                Rewrite in form (x-h)² = k<br>
+                
+                <strong>Example:</strong> Solve x² - 5x + 6 = 0<br>
+                
+                <strong>Method 1 (Factoring):</strong><br>
+                (x - 2)(x - 3) = 0<br>
+                Therefore: x = 2 or x = 3<br>
+                
+                <strong>Method 2 (Quadratic Formula):</strong><br>
+                x = (5 ± √(25-24)) / 2 = (5 ± 1) / 2<br>
+                x = 3 or x = 2<br>
+                
+                Would you like me to solve a specific quadratic equation for you?`
+            };
+            
+            // Simple keyword matching for demo
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes('calculus') || lowerMessage.includes('derivative')) {
+                return responses.calculus;
+            } else if (lowerMessage.includes('essay') || lowerMessage.includes('writing')) {
+                return responses.essay;
+            } else if (lowerMessage.includes('study plan') || lowerMessage.includes('schedule')) {
+                return responses.study;
+            } else if (lowerMessage.includes('quadratic') || lowerMessage.includes('math problem')) {
+                return responses.math;
+            } else {
+                // Generic AI responses
+                const genericResponses = [
+                    `That's a great question! Based on your learning profile, I recommend breaking this topic into smaller components. Let me provide a step-by-step approach:
+                    
+                    <strong>Step 1:</strong> Identify the key concepts involved<br>
+                    <strong>Step 2:</strong> Connect to previously learned material<br>
+                    <strong>Step 3:</strong> Practice with guided examples<br>
+                    <strong>Step 4:</strong> Test understanding with problems<br>
+                    
+                    Would you like me to elaborate on any of these steps?`,
+                    
+                    `Excellent question! I can see you're thinking critically about this topic. Here's my analysis:
+                    
+                    <strong>Key Points to Consider:</strong><br>
+                    • This concept builds on fundamental principles you've already learned<br>
+                    • It's commonly tested in exams, so understanding it well is crucial<br>
+                    • Practice problems are essential for mastery<br>
+                    
+                    I recommend starting with the basics and gradually building complexity. Would you like me to create some practice problems for you?`,
+                    
+                    `Great thinking! Your question shows you're engaging deeply with the material. Let me help you work through this:
+                    
+                    <strong>Approach Strategy:</strong><br>
+                    1. Break down complex ideas into simpler parts<br>
+                    2. Use analogies to relate to familiar concepts<br>
+                    3. Apply the learning through practical examples<br>
+                    4. Test your understanding with self-assessment<br>
+                    
+                    Based on your current progress, you're ready for more advanced concepts in this area. What specific aspect would you like to explore further?`
+                ];
+                
+                return genericResponses[Math.floor(Math.random() * genericResponses.length)];
+            }
+        }
+        
+        function openTool(tool) {
+            const tools = {
+                flashcards: 'AI Flashcard Generator would open here - create personalized flashcards from your study materials!',
+                summarizer: 'Text Summarizer would activate - paste your text and get AI-generated summaries!',
+                translator: 'Language Helper would launch - translate text and get pronunciation help!',
+                calculator: 'Smart Calculator would open - solve complex mathematical problems step-by-step!'
+            };
+            
+            alert(`🛠️ ${tools[tool]}`);
+        }
+        
+        // Auto-focus on input when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('user-input').focus();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Login - EduAI Platform</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 3em;
+            margin-bottom: 10px;
+            color: #2196F3;
+        }
+        
+        .title {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 1.8em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #2196F3;
+        }
+        
+        .login-button {
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: opacity 0.3s ease;
+        }
+        
+        .login-button:hover {
+            opacity: 0.9;
+        }
+        
+        .links {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .links a {
+            color: #2196F3;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .links a:hover {
+            text-decoration: underline;
+        }
+        
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .demo-info {
+            background: #e3f2fd;
+            border: 1px solid #2196F3;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← Back to Home</a>
+    
+    <div class="login-container">
+        <div class="logo">👨‍🏫</div>
+        <h1 class="title">Professor Login</h1>
+        
+        <form onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="professor-id">Professor ID:</label>
+                <input type="text" id="professor-id" name="professor-id" required placeholder="Enter your professor ID">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+            
+            <button type="submit" class="login-button">Login to Dashboard</button>
+        </form>
+        
+        <div class="demo-info">
+            <strong>Demo Access:</strong><br>
+            Professor ID: demo_professor<br>
+            Password: professor123
+        </div>
+        
+        <div class="links">
+            <a href="#" onclick="alert('Feature coming soon!')">Forgot Password?</a>
+            <a href="#" onclick="alert('Contact your institution for registration')">Register</a>
+        </div>
+    </div>
+    
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const professorId = document.getElementById('professor-id').value;
+            const password = document.getElementById('password').value;
+            
+            // Demo login validation
+            if (professorId === 'demo_professor' && password === 'professor123') {
+                // Store login info in localStorage for demo purposes
+                localStorage.setItem('userRole', 'professor');
+                localStorage.setItem('userId', professorId);
+                localStorage.setItem('userName', 'Dr. Sarah Smith');
+                
+                alert('Login successful! Redirecting to dashboard...');
+                window.location.href = 'professor-dashboard.html';
+            } else {
+                alert('Invalid credentials. Please use the demo credentials provided.');
+            }
+        }
+    </script>
+</body>
+</html>
