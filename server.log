@@ -1,0 +1,3 @@
+127.0.0.1 - - [19/Jun/2025 17:39:05] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jun/2025 17:40:18] "GET /test-functionality.html HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jun/2025 17:40:26] "GET /student-dashboard.html HTTP/1.1" 200 -
